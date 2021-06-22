@@ -1,6 +1,14 @@
 package gc.rec;
 
+import gc.rec.dao.RoleRepository;
+import gc.rec.dao.UserRepository;
+import gc.rec.dao.UserRolesRepository;
+import gc.rec.entities.Role;
+import gc.rec.entities.User;
+import gc.rec.entities.UsersRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication; 
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -11,7 +19,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @SpringBootApplication
 @ServletComponentScan
-public class Application {
+public class Application implements ApplicationRunner {
+	@Autowired
+	UserRolesRepository userRolesRepository;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -26,6 +40,17 @@ public class Application {
 	    	registry.addConverter(new gc.rec.conversions.ClientConverter(mc));
 	    	registry.addConverter(new gc.rec.conversions.FournisseurConverter(mf));
 	    }  	    
-	} 
+	}
+	@Override
+	public void run(ApplicationArguments arg0) throws Exception {
+		User user = new User("yahya","azerty",true);
+		Role role = new Role("ROLE_ADMIN");
+		userRepository.saveAndFlush(user);
+		roleRepository.saveAndFlush(role);
+		UsersRoles usersRoles = new UsersRoles();
+		usersRoles.setRole(role);
+		usersRoles.setUser(user);
+		userRolesRepository.saveAndFlush(usersRoles);
+	}
 	 
 }

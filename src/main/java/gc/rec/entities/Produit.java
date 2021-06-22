@@ -19,11 +19,16 @@ import org.hibernate.annotations.NotFoundAction;
 @Entity
 public class Produit implements Serializable 
 { 
-	@Id @NotNull @Size(min=2, max=1000) private String ref; 
-	@Size(min=2, max=1000) private String designation; 
-	@DecimalMin("0")  private double prix; 
-	@Min(0) private int quantite;
-	@Min(0) private int quantiteAlert;
+	@Id @NotNull @Size(min=2, max=1000)
+	private String ref;
+	@Size(min=2, max=1000)
+	private String designation;
+	@DecimalMin("0")
+	private double prix;
+	@Min(0)
+	private int quantite;
+	@Min(0)
+	private int quantiteAlert;
 	
 	@ManyToOne
 	@JoinColumn(name="CODE_FAMILLE", nullable=true)  

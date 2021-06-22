@@ -4,21 +4,26 @@ import java.util.HashMap;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import gc.rec.security.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter 
 {
-	@Autowired private DataSource dataSource; 
-	
+
+	@Autowired
+	MyUserDetailsService userDetailsService;
+
+
 	static HashMap<String,String> pages = new HashMap<String,String>(){{
 		put("SHOW_DASHBOARD","/");
 		put("SHOW_STATISTIQUES","/statistiques");
@@ -50,16 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		put(new String[]{"/produits/add","/produits/update","/produits/delete",
 						 "/familles/save","/familles/delete","/tva/dave","/tva/delete"},
 				new String[]{"UPDATE_PRODUITS"});  
-	}}; 
-	
-	@Override 
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception
-	{ 
-		auth.jdbcAuthentication().dataSource(dataSource)
-		.usersByUsernameQuery("select username as principal, password as credentials, active from user where username=?")
-		.authoritiesByUsernameQuery("select username as principal, role from users_roles ur,role r where ur.username=? and ur.role_id=r.id")
-		.rolePrefix("ROLE_") 
-		.passwordEncoder(new BCryptPasswordEncoder()); 
+	}};
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService)
+				.passwordEncoder(NoOpPasswordEncoder.getInstance());
 	}
 	 
 	@Override 

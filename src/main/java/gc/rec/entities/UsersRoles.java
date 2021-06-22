@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class UsersRoles   implements Serializable
+public class UsersRoles implements Serializable
 {
 	@Id @GeneratedValue
 	private Long id;
