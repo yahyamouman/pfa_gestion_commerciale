@@ -13,7 +13,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication; 
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistry; 
+import org.springframework.format.FormatterRegistry;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
  
 
@@ -26,6 +27,8 @@ public class Application implements ApplicationRunner {
 	UserRepository userRepository;
 	@Autowired
 	RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -43,14 +46,16 @@ public class Application implements ApplicationRunner {
 	}
 	@Override
 	public void run(ApplicationArguments arg0) throws Exception {
-		User user = new User("yahya","azerty",true);
-		Role role = new Role("ROLE_ADMIN");
-		userRepository.saveAndFlush(user);
-		roleRepository.saveAndFlush(role);
-		UsersRoles usersRoles = new UsersRoles();
-		usersRoles.setRole(role);
-		usersRoles.setUser(user);
-		userRolesRepository.saveAndFlush(usersRoles);
+		if (userRepository.findByUserName("youssef").equals(null)) {
+			User user = new User("youssef", passwordEncoder.encode("azerty"), true);
+			Role role = new Role("ROLE_ADMIN");
+			userRepository.saveAndFlush(user);
+			roleRepository.saveAndFlush(role);
+			UsersRoles usersRoles = new UsersRoles();
+			usersRoles.setRole(role);
+			usersRoles.setUser(user);
+			userRolesRepository.saveAndFlush(usersRoles);
+		}
 	}
 	 
 }

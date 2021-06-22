@@ -19,15 +19,15 @@ import org.hibernate.annotations.NotFoundAction;
 @Entity
 public class Produit implements Serializable 
 { 
-	@Id @NotNull @Size(min=2, max=1000)
+	@Id @NotNull //@Size(min=2, max=1000)
 	private String ref;
-	@Size(min=2, max=1000)
+	//@Size(min=2, max=1000)
 	private String designation;
-	@DecimalMin("0")
+	//@DecimalMin("0")
 	private double prix;
-	@Min(0)
+	//@Min(0)
 	private int quantite;
-	@Min(0)
+	//@Min(0)
 	private int quantiteAlert;
 	
 	@ManyToOne
